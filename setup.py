@@ -9,5 +9,9 @@ setup(name="socketconsole",
     py_modules=['socketconsole'],
     description="Unix socket access to python thread dump",
     zip_safe=False,
+    entry_points={
+        'console_scripts': [
+            'socketreader=socketreader:main',
+        ]
+    }
 )
-
