@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 # To set __version__
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 setup(name="socketconsole",
     version=__version__,
