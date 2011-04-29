@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 # To set __version__
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 setup(name="socketconsole",
     version=__version__,
@@ -14,7 +14,7 @@ setup(name="socketconsole",
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'socketreader=socketreader:main',
+            'socketreader=socketconsole:main',
         ]
     }
 )
