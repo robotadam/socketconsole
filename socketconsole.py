@@ -16,6 +16,9 @@ class SocketDumper(threading.Thread):
         threads = dict(
             (t.ident, t) for t in threading.enumerate())
         for thread_id, stack in sys._current_frames().items():
+            # Skip the current thread; we know what it's doing
+            if threads[thread_id].name == self.name:
+                continue
             code.append("\n# Thread Name: %s, ThreadID: %s\n" %
                 (threads[thread_id].name, thread_id))
             code.extend(traceback.format_list(traceback.extract_stack(stack)))
