@@ -21,6 +21,7 @@ class SocketDumper(threading.Thread):
         return code
 
     def run(self):
+        self.name = "SocketConsole Watcher"
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         filename = '/tmp/socketdumper-%s' % os.getpid()
         try:
@@ -30,7 +31,6 @@ class SocketDumper(threading.Thread):
 
         s.bind(filename)
         s.listen(1)
-        print "Serving on %s" % filename
         
         while 1:
             conn, addr = s.accept()
