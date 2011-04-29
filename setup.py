@@ -6,7 +6,10 @@ __version__ = '0.0.5'
 
 setup(name="socketconsole",
     version=__version__,
-    py_modules=['socketconsole', 'socketreader'],
+    author='Adam Lowry',
+    author_email='adam@therobots.org',
+    license='BSD',
+    py_modules=['socketconsole'],
     description="Unix socket access to python thread dump",
     zip_safe=False,
     entry_points={
