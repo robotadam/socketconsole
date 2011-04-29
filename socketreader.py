@@ -1,5 +1,6 @@
 import glob
 import socket
+import sys
 
 def main():
     for filename in glob.glob('/tmp/socketdumper-*'):
@@ -8,6 +9,8 @@ def main():
         print "**** %s" % filename
         buf = s.recv(1024)
         while buf:
-            print buf
+            sys.stdout.write(buf)
             buf = s.recv(1024)
+        sys.stdout.write('\n')
+        sys.stdout.flush()
         s.close()
