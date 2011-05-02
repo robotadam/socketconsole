@@ -20,8 +20,12 @@ class SocketDumper(threading.Thread):
             # Skip the current thread; we know what it's doing
             if thread_id == thread.get_ident():
                 continue
+            try:
+                name = threads[thread_id].name
+            except KeyError:
+                name = 'Unknown (see Python issue #5632)'
             code.append("\n# Thread Name: %s, ThreadID: %s\n" %
-                (threads[thread_id].name, thread_id))
+                (name, thread_id))
             code.extend(traceback.format_list(traceback.extract_stack(stack)))
         return code
 
