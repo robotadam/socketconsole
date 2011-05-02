@@ -66,6 +66,7 @@ def main():
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             s.connect(filename)
             print "**** %s" % filename
+            sys.stdout.flush()
             buf = s.recv(1024)
             while buf:
                 sys.stdout.write(buf)
