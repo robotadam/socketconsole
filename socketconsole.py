@@ -54,7 +54,7 @@ def cleanup():
         os.remove(filename)
     except OSError:
         pass
-            
+
 
 sockpath = tempfile.gettempdir()
 sockthread = None
@@ -88,7 +88,7 @@ def main():
             sys.stdout.write('\n')
             sys.stdout.flush()
             s.close()
-        except Exception, e:
+        except Exception as e:
             sys.stdout.write("Couldn't connect: %s: %s" % (type(e), str(e)))
             sys.stdout.flush()
 
