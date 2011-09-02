@@ -3,6 +3,7 @@ import glob
 import os
 import socket
 import sys
+import tempfile
 import thread
 import threading
 import traceback
@@ -32,7 +33,7 @@ class SocketDumper(threading.Thread):
     def run(self):
         self.name = "SocketConsole Watcher"
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        filename = '/tmp/socketdumper-%s' % os.getpid()
+        filename = os.path.join(sockpath, 'socketdumper-%s' % os.getpid())
         try:
             os.remove(filename)
         except OSError:
@@ -55,17 +56,26 @@ def cleanup():
         pass
             
 
+sockpath = tempfile.gettempdir()
 sockthread = None
 
-def launch():
+def launch(path=None):
+    global sockpath, sockthread
+    if path is not None and os.path.exists(path) and os.path.isdir(path):
+        sockpath = path
     atexit.register(cleanup)
-    global sockthread
     sockthread = SocketDumper()
     sockthread.start()
 
 
 def main():
-    for filename in glob.glob('/tmp/socketdumper-*'):
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+    else:
+        path = sockpath
+
+    socket_glob = os.path.join(path, 'socketdumper-*')
+    for filename in glob.glob(socket_glob):
         try:
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             s.connect(filename)
@@ -81,3 +91,7 @@ def main():
         except Exception, e:
             sys.stdout.write("Couldn't connect: %s: %s" % (type(e), str(e)))
             sys.stdout.flush()
+
+
+if __name__ == '__main__':
+    main()
