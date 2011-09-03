@@ -13,6 +13,8 @@ class SocketDumper(threading.Thread):
 
     daemon = True
 
+    locals_limit = 20
+
     def stacktraces(self):
         code = []
         threads = dict(
@@ -28,6 +30,12 @@ class SocketDumper(threading.Thread):
             code.append("\n# Thread Name: %s, ThreadID: %s\n" %
                 (name, thread_id))
             code.extend(traceback.format_list(traceback.extract_stack(stack)))
+            stack_locals = stack.f_locals.items()[:self.locals_limit]
+            code.append("\n# Locals:\n")
+            for i, (var, val) in enumerate(stack_locals):
+                if i == self.locals_limit:
+                    break
+                code.append("  %s: %r\n" % (var, val))
         return code
 
     def run(self):
