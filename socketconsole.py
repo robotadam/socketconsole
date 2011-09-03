@@ -49,7 +49,7 @@ class SocketDumper(threading.Thread):
 
 
 def cleanup():
-    filename = '/tmp/socketdumper-%s' % os.getpid()
+    filename = os.path.join(sockpath, 'socketdumper-%s' % os.getpid())
     try:
         os.remove(filename)
     except OSError:
