@@ -67,6 +67,7 @@ def cleanup():
 sockpath = tempfile.gettempdir()
 sockthread = None
 
+
 def launch(path=None):
     global sockpath, sockthread
     if path is not None and os.path.exists(path) and os.path.isdir(path):
