@@ -1,0 +1,4 @@
+*.bak
+*.egg-info
+*.pyc
+*.swp
