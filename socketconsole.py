@@ -1,10 +1,10 @@
+from __future__ import print_function
 import atexit
 import glob
 import os
 import socket
 import sys
 import tempfile
-import thread
 import threading
 import traceback
 
@@ -21,7 +21,7 @@ class SocketDumper(threading.Thread):
             (t.ident, t) for t in threading.enumerate())
         for thread_id, stack in sys._current_frames().items():
             # Skip the current thread; we know what it's doing
-            if thread_id == thread.get_ident():
+            if thread_id == self.ident:
                 continue
             try:
                 name = threads[thread_id].name
@@ -30,7 +30,7 @@ class SocketDumper(threading.Thread):
             code.append("\n# Thread Name: %s, ThreadID: %s\n" %
                 (name, thread_id))
             code.extend(traceback.format_list(traceback.extract_stack(stack)))
-            stack_locals = stack.f_locals.items()[:self.locals_limit]
+            stack_locals = list(stack.f_locals.items())[:self.locals_limit]
             code.append("\n# Locals:\n")
             for i, (var, val) in enumerate(stack_locals):
                 if i == self.locals_limit:
@@ -49,10 +49,10 @@ class SocketDumper(threading.Thread):
 
         s.bind(filename)
         s.listen(1)
-        
+
         while 1:
             conn, addr = s.accept()
-            conn.sendall(''.join(self.stacktraces()))
+            conn.sendall(''.join(self.stacktraces()).encode('utf8'))
             conn.close()
 
 
@@ -87,11 +87,12 @@ def main():
         try:
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             s.connect(filename)
-            print "**** %s" % filename
+            print("**** %s" % filename)
             sys.stdout.flush()
             buf = s.recv(1024)
             while buf:
-                sys.stdout.write(buf)
+                #FIXME I suppose the buffer may split a multibyte character...
+                sys.stdout.write(buf.decode('utf8'))
                 buf = s.recv(1024)
             sys.stdout.write('\n')
             sys.stdout.flush()
