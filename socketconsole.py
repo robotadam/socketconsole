@@ -1,5 +1,6 @@
 from __future__ import print_function
 import atexit
+import errno
 import glob
 import os
 import socket
@@ -51,9 +52,16 @@ class SocketDumper(threading.Thread):
         s.listen(1)
 
         while 1:
-            conn, addr = s.accept()
-            conn.sendall(''.join(self.stacktraces()).encode('utf8'))
-            conn.close()
+            try:
+                conn, addr = s.accept()
+                conn.sendall(''.join(self.stacktraces()).encode('utf8'))
+                conn.close()
+            except socket.error as e:
+                if e[0] == errno.EINTR:
+                    # EINTR is ignorable
+                    continue
+                else:
+                    raise
 
 
 def cleanup():
