@@ -50,3 +50,17 @@ From the command line:
     $ socketreader some/custom/path
     $ # Or you can run socketconsole.py directly
     $ python socketconsole.py some/custom/path
+
+Cleaning Stale Files
+--------------------
+
+It's not uncommon for processes to leave behind socket files (eg if the process
+dies unexpectedly). socketreader includes a clean option which conservatively
+cleans up these stale files. It won't kill socket files for PIDs which are
+alive, so feel free to run it at any time:
+
+::
+
+    $ # For safety, the clean option requires you pass a path
+    $ socketreader /tmp clean
+    ...
