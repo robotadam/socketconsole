@@ -104,7 +104,7 @@ def clean_socket_files(socket_glob):
                 print('PID %d is alive but owned by another user, skipping.'
                         % pid)
                 continue
-            elif e.errno != errno.ESRCH:
+            elif e.errno == errno.ESRCH:
                 # 'No such process' means we can safely delete this stale pid
                 print('PID %d not found. Deleting %s' % (pid, filename))
             else:
