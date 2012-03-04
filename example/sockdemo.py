@@ -1,3 +1,4 @@
+import random
 import time
 import threading
 
@@ -6,6 +7,7 @@ import socketconsole
 socketconsole.launch()
 
 def waiter():
+    some_value = random.randint(0, 1000)
     time.sleep(500)
 
 
